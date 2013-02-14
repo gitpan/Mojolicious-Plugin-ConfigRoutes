@@ -1,0 +1,24 @@
+---
+abstract: 'is a Perl-ish configuration of routes plugin.'
+author:
+  - 'Mikhail Che <mche@aukama.dyndns.org>'
+build_requires:
+  Test::More: 0
+configure_requires:
+  Module::Build: 0
+dynamic_config: 1
+generated_by: 'Module::Build version 0.4003, CPAN::Meta::Converter version 2.120921'
+license: perl
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
+name: Mojolicious-Plugin-ConfigRoutes
+provides:
+  Mojolicious::Plugin::ConfigRoutes:
+    file: lib/Mojolicious/Plugin/ConfigRoutes.pm
+    version: 0.01
+requires:
+  Mojolicious: 3.79
+resources:
+  license: http://dev.perl.org/licenses/
+version: 0.01
