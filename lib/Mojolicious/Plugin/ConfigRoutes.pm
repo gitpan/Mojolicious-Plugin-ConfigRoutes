@@ -3,7 +3,7 @@ use Mojo::Base 'Mojolicious::Plugin';
 
 use File::Spec::Functions 'file_name_is_absolute';
 
-our $VERSION=0.02;
+our $VERSION=0.03;
 
 sub register {
   my ($self, $app, $conf) = @_;
@@ -29,7 +29,7 @@ sub register {
 	if ($conf->{routes}) {
 		push @routes, @{$conf->{routes}};
 	}
-	$r->namespaces($conf->{namespaces}) if $conf->{namespaces};
+	push @{$r->namespaces}, @{$conf->{namespaces}} if $conf->{namespaces};
 	
   } elsif (ref($conf) eq 'ARRAY') {
 	push @routes, @$conf;
@@ -70,7 +70,7 @@ Mojolicious::Plugin::ConfigRoutes - is a Perl-ish configuration of routes plugin
 
 =head1 VERSION
 
-Version 0.02
+Version 0.03
 
 =head1 SYNOPSIS
 

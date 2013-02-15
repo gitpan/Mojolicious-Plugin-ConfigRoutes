@@ -16,9 +16,9 @@ name: Mojolicious-Plugin-ConfigRoutes
 provides:
   Mojolicious::Plugin::ConfigRoutes:
     file: lib/Mojolicious/Plugin/ConfigRoutes.pm
-    version: 0.02
+    version: 0.03
 requires:
   Mojolicious: 3.79
 resources:
   license: http://dev.perl.org/licenses/
-version: 0.02
+version: 0.03
