@@ -3,7 +3,7 @@ use Mojo::Base 'Mojolicious::Plugin';
 
 use File::Spec::Functions 'file_name_is_absolute';
 
-our $VERSION = 0.01;
+our $VERSION=0.02;
 
 sub register {
   my ($self, $app, $conf) = @_;
@@ -70,7 +70,7 @@ Mojolicious::Plugin::ConfigRoutes - is a Perl-ish configuration of routes plugin
 
 =head1 VERSION
 
-Version 0.01
+Version 0.02
 
 =head1 SYNOPSIS
 
@@ -91,18 +91,17 @@ L<Mojolicious::Plugin::ConfigRoutes> supports the following options.
 
 =head2 file
 
-File name or full path to configuration file that do and must return list, array ref or hash ref.
-
     $app->plugin(ConfigRoutes =>{file => 'ConfigRoutes.pm'});
 
+File name or full path to configuration file that do (perldoc -f do) and must create list or array ref or hash ref.
 
 =over 4
 
 =item * Returned list would be consider as pairs of key=>value. Keys are namespaces and routes. Values are arranged array refs, see options below.
 
-=item * Returned array ref would be consider as arranged routes, see format on option routes below.
-
 =item * Returned hash ref with pairs of key=>value. Keys are namespaces and routes. Values are arranged array refs, see options below.
+
+=item * Returned array ref would be consider as arranged routes, see format on option routes below.
 
 =back
 
@@ -112,9 +111,9 @@ Value is array ref of the arranged routes [[<route 1>],[<route 2>],...[<route N>
 
     $app->plugin(ConfigRoutes =>{routes => [[<method1 of module Mojolicious::Routes::Route> => <value>, <method2 of module Mojolicious::Routes::Route> => <value>, ... ],...]});
 
-Methods of Mojolicious::Routes::Route as keys in one route must be strongly arranged pairs with their values in order to apply to $app->routes object. For example:
+Methods of L<Mojolicious::Routes::Route> as keys in one route must be strongly arranged pairs with their values in order to apply to $app->routes object. For example:
 
-    # the standard
+    # the standard in startup
     $r->bridge('/foo')->to('foo#foo')->route('/bar')->to(controller=>'bar', action=>'bar',...)->...;
     $r-><next route>;
     ...
@@ -122,14 +121,57 @@ Methods of Mojolicious::Routes::Route as keys in one route must be strongly arra
     $app->plugin(ConfigRoutes =>{routes => [[bridge=>'/foo', to=>'foo#for', route=>'/bar', to=>{controller=>'bar', action=>'bar',...}, ...], [<next route>], ...]);
     
 
-Values of keys(methods) within route can be scalar or [array ref] or {hash ref}. Array ref and hash ref are treated as lists when apply to their methods.
-
+Values of keys(methods) within route can be $scalar or [array ref] or {hash ref}. Array ref and hash ref are treated as lists when apply to their methods.
 
 =head2 namespaces
 
 Value is array ref of L<http://mojolicio.us/perldoc/Mojolicious/Routes#namespaces>
 
     $app->plugin(ConfigRoutes =>{namespaces => ['Foo::Bar::Controller']});
+
+
+=head1 NOTE
+
+If pointed <file> and <routes> options together then <routes> aplly first and <file> routes after.
+
+The <namespaces> and namespaces from <file> are similar.
+
+=head1 EXAMPLES of config file
+
+=head2 List or hash ref allow options
+
+    (# or {
+      namespaces=>['MyFoo1', 'MyFoo2'],
+      routes => [
+        [
+          bridge=>'/my',
+          to=>'Auth#user',
+          route=>'/profile/:action/:user',
+          to=>{controller=>'profile',},
+          name=>'UserProfile',
+        ],
+        [,
+          get=>'...',
+          to=>{cb=>sub{...},},
+        ],
+      ],
+    );
+
+=head2 Array ref - only routes
+
+    [
+        [
+          bridge=>'/my',
+          to=>'Auth#user',
+          route=>'/profile/:action/:user',
+          to=>{controller=>'profile',},
+          name=>'UserProfile',
+        ],
+        [,
+          get=>'/',
+          to=>{cb=>sub{...},},
+        ],
+    ];
 
 =head1 AUTHOR
 
@@ -178,6 +220,42 @@ L<http://search.cpan.org/dist/Mojolicious-Plugin-ConfigRoutes/>
 =head1 LICENSE AND COPYRIGHT
 
 Copyright 2013 Mikhail Che.
+
+This program is free software; you can redistribute it and/or modify it
+under the terms of the the Artistic License (2.0). You may obtain a
+copy of the full license at:
+
+L<http://www.perlfoundation.org/artistic_license_2_0>
+
+Any use, modification, and distribution of the Standard or Modified
+Versions is governed by this Artistic License. By using, modifying or
+distributing the Package, you accept this license. Do not use, modify,
+or distribute the Package, if you do not accept this license.
+
+If your Modified Version has been derived from a Modified Version made
+by someone other than you, you are nevertheless required to ensure that
+your Modified Version complies with the requirements of this license.
+
+This license does not grant you the right to use any trademark, service
+mark, tradename, or logo of the Copyright Holder.
+
+This license includes the non-exclusive, worldwide, free-of-charge
+patent license to make, have made, use, offer to sell, sell, import and
+otherwise transfer the Package with respect to any patent claims
+licensable by the Copyright Holder that are necessarily infringed by the
+Package. If you institute patent litigation (including a cross-claim or
+counterclaim) against any party alleging that the Package constitutes
+direct or contributory patent infringement, then this Artistic License
+to you shall terminate on the date that such litigation is filed.
+
+Disclaimer of Warranty: THE PACKAGE IS PROVIDED BY THE COPYRIGHT HOLDER
+AND CONTRIBUTORS "AS IS' AND WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES.
+THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+PURPOSE, OR NON-INFRINGEMENT ARE DISCLAIMED TO THE EXTENT PERMITTED BY
+YOUR LOCAL LAW. UNLESS REQUIRED BY LAW, NO COPYRIGHT HOLDER OR
+CONTRIBUTOR WILL BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, OR
+CONSEQUENTIAL DAMAGES ARISING IN ANY WAY OUT OF THE USE OF THE PACKAGE,
+EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 =cut
