@@ -3,7 +3,7 @@ use Mojo::Base 'Mojolicious::Plugin';
 
 use File::Spec::Functions 'file_name_is_absolute';
 
-our $VERSION=0.03;
+our $VERSION=0.04;
 
 sub register {
   my ($self, $app, $conf) = @_;
@@ -53,6 +53,7 @@ sub register {
   
   $app->log->debug("Маршруты: ", $app->dumper($r));
 }
+
 
 =encoding utf8
 
